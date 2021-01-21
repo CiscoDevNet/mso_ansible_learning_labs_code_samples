@@ -1,0 +1,59 @@
+---
+- name: ENSURE APPLICATION CONFIGURATION EXISTS
+  hosts: mso
+  connection: local
+  gather_facts: False
+
+  tasks:
+    - name: ENSURE APPLICATION EXISTS
+      cisco.mso.mso_schema_template_anp:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "present"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ schema | default('test_schema') }}"
+        template: "Template_1"
+        anp: "{{ anp | default('intranet') }}"
+
+    - name: ENSURE APPLICATION EPGS EXISTS
+      cisco.mso.mso_schema_template_anp_epg:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "present"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ schema | default('test_schema') }}"
+        template: "Template_1"
+        anp: "{{ anp | default('intranet') }}"
+        epg: "{{ epg | default('mso_epg') }}"
+        bd:
+          name: "{{ bd | default('mso_bd') }}"
+          schema: "{{ mso_schema | default('test_schema') }}"
+          template: "Template_1"
+
+    - name: ENSURE EPG IS ASSOCIATED TO CONTRACTS
+      cisco.mso.mso_schema_template_anp_epg_contract:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "present"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ schema | default('test_schema') }}"
+        template: "Template_1"
+        anp: "{{ anp | default('intranet') }}"
+        epg: "{{ epg | default('mso_epg') }}"
+        contract:
+          name: '{{ item.name }}'
+          template: '{{ item.template }}'
+          type: '{{ item.type }}'
+      with_items: "{{ contracts }}"

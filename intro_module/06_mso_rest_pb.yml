@@ -1,0 +1,18 @@
+---
+- name: USE MSO REST MODULE
+  hosts: mso
+  connection: local
+  gather_facts: False
+
+  tasks:
+    - name: QUERY AN EXISTING SCHEMA
+      cisco.mso.mso_rest:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        path: "/mso/api/v1/schemas"
+        method: "get"

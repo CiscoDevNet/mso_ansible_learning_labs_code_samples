@@ -1,0 +1,71 @@
+---
+- name: ENSURE APPLICATION CONFIGURATION EXISTS
+  hosts: mso
+  connection: local
+  gather_facts: False
+  vars_prompt:
+    - name: "tenant"
+      prompt: "What would you like to name your Tenant?"
+      private: no
+
+  tasks:
+    - name: ENSURE SITE EXISTS
+      cisco.mso.mso_site:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "present"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        site: "{{ site | default('test_site') }}"
+        apic_username: "{{ apic_username }}"
+        apic_password: "{{ apic_password }}"
+        apic_site_id: "{{ apic_site_id | default(101) }}"
+        urls:
+        - https://{{ apic_hostname }}
+        location:
+          latitude: 50.887318
+          longitude: 4.447084
+
+    - name: ENSURE SITE IS ASSOCIATED TO A TENANT
+      cisco.mso.mso_tenant_site:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "present"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        tenant: "{{ tenant }}"
+        site: "{{ site | default('test_site') }}"
+
+    - name: ENSURE SITE IS ASSOCIATED WITH SCHEMA
+      cisco.mso.mso_schema_site:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "present"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ mso_schema | default('test_schema') }}"
+        template: "Template_1"
+        site: "{{ site | default('test_site') }}"
+
+    - name: ENSURE TEMPLATE IS DEPLOYED TO SITE
+      cisco.mso.mso_schema_template_deploy:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "deploy"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ mso_schema | default('test_schema') }}"
+        template: "Template_1"
+        site: "{{ site | default('test_site') }}"

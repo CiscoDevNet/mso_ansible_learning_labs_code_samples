@@ -1,0 +1,40 @@
+---
+- name: ENSURE APPLICATION CONFIGURATION EXISTS
+  hosts: mso
+  connection: local
+  gather_facts: False
+
+  tasks:
+    - name: ENSURE SCHEMA FILTERS EXIST
+      cisco.mso.mso_schema_template_filter_entry:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "present"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ schema | default('test_schema') }}"
+        template: "Template_1"
+        filter: "{{ mso_filter | default('https') }}"
+        entry: "{{ mso_entry | default('https') }}"
+
+    - name: ENSURE SCHEMA CONTRACTS EXIST
+      cisco.mso.mso_schema_template_contract_filter:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "present"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ schema | default('test_schema') }}"
+        template: "Template_1"
+        filter: "{{ mso_filter | default('https') }}"
+        filter_schema: "{{ schema | default('test_schema') }}"
+        filter_template: "Template_1"
+        contract: "{{ mso_sql_contract | default('web') }}"
+        contract_filter_type: "{{ contract_filter_type | default('one-way') }}"
+        filter_type: "{{ filter_type | default('consumer-to-provider') }}"

@@ -1,0 +1,11 @@
+[mso:vars]
+username=admin
+password=C1sco!234567
+ansible_python_interpreter="/usr/bin/env python"
+apic_username=admin
+apic_password=C1sco12345
+apic_site_id=101
+apic_hostname=10.10.20.14
+
+[mso]
+10.10.20.60

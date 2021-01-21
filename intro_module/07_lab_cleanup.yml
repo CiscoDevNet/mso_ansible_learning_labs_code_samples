@@ -1,0 +1,89 @@
+---
+- name: USE MSO REST MODULE
+  hosts: mso
+  connection: local
+  gather_facts: False
+  vars_prompt:
+    - name: "tenant"
+      prompt: "What would you like to name your Tenant?"
+      private: no
+
+  tasks:
+    - debug: msg="ENSURE LAB WORK IS CLEANED UP"
+    
+    - name: ENSURE TEMPLATE IS UNDEPLOYED FROM SITE
+      cisco.mso.mso_schema_template_deploy:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "undeploy"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ schema | default('test_schema') }}"
+        template: "Template_1"
+        site: "{{ site | default('test_site') }}"
+
+    - name: ENSURE SITE IS DISSOCIATED FROM SCHEMA
+      cisco.mso.mso_schema_site:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "absent"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ schema | default('test_schema') }}"
+        template: "Template_1"
+        site: "{{ site | default('test_site') }}"
+
+    - name: ENSURE SITE IS DISSOCIATED FROM TENANT
+      cisco.mso.mso_tenant_site:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "absent"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        tenant: "{{ tenant }}"
+        site: "{{ site | default('test_site') }}"
+
+    - name: ENSURE SITE IS REMOVED
+      cisco.mso.mso_site:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "absent"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        site: "{{ site | default('test_site') }}"
+
+    - name: ENSURE SCHEMA IS REMOVED
+      cisco.mso.mso_schema:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "absent"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ schema | default('test_schema') }}"
+
+    - name: ENSURE TENANT IS REMOVED
+      cisco.mso.mso_tenant:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "absent"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        tenant: "{{ tenant }}"

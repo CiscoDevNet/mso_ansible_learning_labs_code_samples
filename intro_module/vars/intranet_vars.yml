@@ -1,0 +1,8 @@
+---
+  tenant: CHANGEME
+  anp: "intranet"
+  epg: "mso_epg"
+  contracts:
+    - name: "web"
+      template: "Template_1"
+      type: "provider"

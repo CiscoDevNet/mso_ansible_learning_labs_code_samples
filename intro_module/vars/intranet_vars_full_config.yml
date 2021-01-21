@@ -1,0 +1,14 @@
+---
+tenant: CHANGEME
+schema: "test_schema"
+template: "Template_1"
+vrf: "mso_vrf"
+bd: "mso_bd"
+anp: "intranet"
+epg: "mso_epg"
+filter: "https"
+filter_schema: "mso_schema"
+filter_template: "Template_1"
+entry: "https"
+contract_filter_type: "both-way"
+filter_type: "consumer-to-provider"

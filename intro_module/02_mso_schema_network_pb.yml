@@ -1,0 +1,56 @@
+---
+- name: ENSURE APPLICATION CONFIGURATION EXISTS
+  hosts: mso
+  connection: local
+  gather_facts: False
+  vars_prompt:
+    - name: "tenant"
+      prompt: "What would you like to name your Tenant?"
+      private: no
+
+  tasks:
+    - name: ENSURE SCHEMA WITH TEMPLATE EXISTS
+      cisco.mso.mso_schema_template:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "present"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ schema }}"
+        tenant: "{{ tenant }}"
+        template: "Template_1"
+
+    - name: ENSURE SCHEMA WITH VRF EXISTS
+      cisco.mso.mso_schema_template_vrf:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "present"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ schema }}"
+        template: "Template_1"
+        vrf: "{{ vrf }}"
+
+    - name: ENSURE SCHEMA WITH BRIDGE DOMAIN EXISTS
+      cisco.mso.mso_schema_template_bd:
+        host: "{{ ansible_host }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        state: "present"
+        validate_certs: False
+        use_ssl: True
+        use_proxy: True
+        output_level: info
+        schema: "{{ schema }}"
+        template: "Template_1"
+        bd: "{{ mso_bd | default('mso_bd') }}"
+        vrf:
+          name: "{{ vrf }}"
+          schema: "{{ schema }}"
+          template: "Template_1"
